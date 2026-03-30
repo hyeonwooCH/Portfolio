@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최현우 - AI Engineer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .tab-active {
+            border-bottom: 2px solid #0369a1;
+            color: #0369a1;
+            font-weight: 600;
+        }
+        .project-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-overlay {
+            background-color: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Chosen Palette: Warm Neutrals & Tech Accents (Slate background, Sky Blue & Emerald Green accents for professional AI tech vibe) -->
+    <!-- Application Structure Plan: The SPA is structured as an interactive executive dashboard designed specifically for technical recruiters and hiring managers at CJ OliveNetworks. Instead of a linear resume, it uses a 'Skills -> Impact -> Projects' flow. It starts with an executive summary aligning with the "Physical AI & Multimodal Specialist" persona. The Skills section uses a radar chart to prove the shift from pure CV to a balanced AI engineer. The Impact section uses bar charts to quantitatively demonstrate optimization skills (a key JD requirement). Finally, the Project Explorer allows non-linear filtering of projects based on the JD's key pillars (Physical AI, Language AI/Agent, Optimization). This structure prioritizes the candidate's strategic fit and verifiable results over chronological history. -->
+    <!-- Visualization & Content Choices: 
+         1. Skill Matrix (Radar Chart): Maps original CV skills + new LLM/Agent skills -> Goal: Show balanced competency -> Justification: Quickly visualizes JD alignment -> Library: Chart.js.
+         2. Optimization Impact (Bar Chart): Shows metric improvements (Param reduction, Speed, mAP) -> Goal: Quantify optimization capability -> Justification: Hard numbers prove "efficiency" for Edge/Physical AI -> Library: Chart.js.
+         3. Interactive Project Grid: Filters by Physical AI, Agent, etc. -> Goal: Organize complex project history -> Justification: Allows recruiters to instantly find JD-relevant projects -> Library: Vanilla JS DOM manipulation. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <span class="text-2xl font-bold text-sky-700">&#x2B22;</span>
+                    <span class="font-bold text-xl tracking-tight">Hyeonwoo Choi</span>
+                </div>
+                <div class="hidden sm:flex space-x-8">
+                    <a href="#about" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">About</a>
+                    <a href="#competency" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Competency</a>
+                    <a href="#impact" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Impact Metrics</a>
+                    <a href="#projects" class="text-slate-500 hover:text-slate-900 px-3 py-2 text-sm font-medium transition-colors">Project Explorer</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        <section id="about" class="bg-gradient-to-b from-white to-slate-50 py-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-2/3">
+                    <div class="inline-block bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-semibold mb-4 border border-sky-200">
+                        Targeting: AI Engineer (CJ OliveNetworks)
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
+                        AI Engineer <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-emerald-500">
+                            Physical AI & Multimodal Specialist
+                        </span>
+                    </h1>
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                        단순한 Computer Vision을 넘어, <strong>물리적 공간의 문제를 디지털화하여 해결하는 Physical AI</strong>와 
+                        <strong>LLM 기반의 Multimodal Agent 서비스</strong>를 설계합니다. 
+                        현업의 리소스 제약을 이해하고 Transformer 메커니즘 분석 및 경량화를 통해 실제 비즈니스에 적용 가능한 최적의 AI 솔루션을 개발합니다.
+                    </p>
+                    <div class="flex flex-wrap gap-4 text-sm font-medium text-slate-700">
+                        <div class="flex items-center gap-1 bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
+                            <span class="text-sky-500">&#x1F4BB;</span> Python, C++, PyTorch, TensorFlow
+                        </div>
+                        <div class="flex items-center gap-1 bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
+                            <span class="text-sky-500">&#x1F9E0;</span> LLM, Agent, Prompt Engineering
+                        </div>
+                        <div class="flex items-center gap-1 bg-white px-4 py-2 rounded-lg shadow-sm border border-slate-200">
+                            <span class="text-sky-500">&#x2699;</span> Edge Optimization, MobileNet, ViT
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/3 flex justify-center">
+                    <div class="w-64 h-64 bg-slate-200 rounded-3xl shadow-xl overflow-hidden relative flex items-center justify-center border-4 border-white">
+                        <span class="text-8xl">&#x1F468;&#x200D;&#x1F4BB;</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competency" class="py-16 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Core Competency Matrix</h2>
+                    <p class="text-slate-600 max-w-2xl mx-auto">
+                        본 섹션은 지원자의 핵심 AI 기술 역량을 4가지 차원(Vision, Physical AI, LLM/Agent, Optimization)으로 시각화합니다. 
+                        단일 도메인에 국한되지 않고, 데이터 수집부터 모델 최적화, 그리고 Language AI를 결합한 종합적인 솔루션 구축 역량을 확인할 수 있습니다.
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-8 justify-center">
+                    <div class="w-full md:w-1/2">
+                        <div class="chart-container">
+                            <canvas id="competencyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="text-emerald-500">&#x1F3ED;</span> Physical AI (제조/물류/보안)
+                            </h3>
+                            <p class="text-slate-600 text-sm">
+                                X-ray 위해물품 판독, 배터리 결함 탐지 등 제조/보안 현장의 데이터를 다루며 실세계(Physical) 문제를 AI로 해결하는 파이프라인 구축 역량.
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="text-sky-500">&#x1F916;</span> Multimodal & Language Agent
+                            </h3>
+                            <p class="text-slate-600 text-sm">
+                                Gemini API, GPT-4o 등을 활용한 Prompt Engineering 설계. 이미지 분석(CV) 결과를 LLM이 추론하여 리포트를 생성하는 자율적 Agent 워크플로우 구현.
+                            </p>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <span class="text-amber-500">&#x26A1;</span> Model Optimization & 경량화
+                            </h3>
+                            <p class="text-slate-600 text-sm">
+                                Transformer 아키텍처 내부 메커니즘 분석(Token Pruning) 및 Edge 디바이스 탑재를 고려한 MobileNet 기반 파라미터 경량화 기술 적용.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="py-16 bg-slate-50 border-y border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Optimization Achievements</h2>
+                    <p class="text-slate-600 max-w-2xl mx-auto">
+                        해당 영역은 모델 경량화 및 학습 속도 개선에 대한 정량적 성과를 나타냅니다. 제한된 자원 내에서 AI 모델을 실제 서비스에 이식하기 위해 필수적인 '엔지니어링 문제 해결 능력'과 그 결과를 시각적으로 검증할 수 있습니다.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">배터리 결함 탐지 모델 경량화 (MobileNetV3 도입)</h3>
+                        <div class="chart-container h-64">
+                            <canvas id="impactChart1"></canvas>
+                        </div>
+                        <p class="mt-4 text-sm text-center text-slate-500">파라미터 83% 감소 및 학습 자원 최적화 달성</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">X-ray 검색 모델 학습 속도 개선 (Backbone Freeze)</h3>
+                        <div class="chart-container h-64">
+                            <canvas id="impactChart2"></canvas>
+                        </div>
+                        <p class="mt-4 text-sm text-center text-slate-500">입력 해상도 최적화 및 가중치 고정을 통한 Epoch 당 소요 시간 70% 단축</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-16 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-10 text-center">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Project Explorer</h2>
+                    <p class="text-slate-600 max-w-3xl mx-auto">
+                        CJ올리브네트웍스 JD 기반으로 재구성된 핵심 프로젝트 포트폴리오입니다. 상단의 필터를 클릭하여 
+                        <strong>Physical AI (제조/보안)</strong>, <strong>Language AI/Agent</strong>, <strong>Core Optimization (경량화)</strong> 등 관심 분야의 프로젝트를 선별하여 탐색할 수 있습니다. 카드를 클릭하면 상세한 문제 해결 과정을 볼 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-2 mb-8" id="filter-container">
+                    <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-colors bg-sky-600 text-white shadow-md" data-filter="all">All Projects</button>
+                    <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200" data-filter="physical">Physical AI</button>
+                    <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200" data-filter="agent">LLM / Agent</button>
+                    <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200" data-filter="optimize">Core Optimization</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="project-grid">
+                    <!-- Projects injected via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center">
+        <p class="mb-2"><strong>Hyeonwoo Choi</strong> - AI Engineer Portfolio</p>
+        <p class="text-sm">010-2790-4133 | 1124harry@naver.com | @hyeonwooCH</p>
+    </footer>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-overlay opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto m-4 shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content-wrapper">
+            <div class="p-6 md:p-8 relative">
+                <button id="close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 text-2xl font-bold cursor-pointer">
+                    &#x2715;
+                </button>
+                <div id="modal-content">
+                    <!-- Modal Content Injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projectData = [
+            {
+                id: 1,
+                title: "불량 배터리 이미지 세그멘테이션",
+                category: "physical",
+                tag: "Physical AI",
+                role: "제조 현장 최적화 Physical AI 모델 설계 (팀장)",
+                tech: "PyTorch, Attention U-Net, MobileNetV3, YOLOv11-seg",
+                problem: [
+                    "고해상도 데이터 처리 부하 및 긴 학습 시간으로 인한 Edge 자원 제약",
+                    "정상 vs 오염/손상 클래스 불균형으로 인한 미세 결함 탐지 저하"
+                ],
+                solution: [
+                    "Encoder를 MobileNetV3 기반 DSC 구조로 교체하여 모델 크기를 133MB에서 22MB로 경량화",
+                    "Focal Tversky & Hybrid Loss 도입. 결함 클래스(Damaged)에 70배 가중치 부여로 민감도 극대화"
+                ],
+                result: [
+                    "기업 프로젝트 대비 10% 데이터와 0.5% 자원으로 상용 모델 성능 94%(mIoU 0.8021) 확보",
+                    "파라미터 83% 감소, 학습 시간 73% 단축 및 손상 클래스 IoU 425% 향상"
+                ]
+            },
+            {
+                id: 2,
+                title: "CV 기반 얼굴 관상 분석 시스템",
+                category: "agent",
+                tag: "Multimodal Agent",
+                role: "Multimodal LLM Agent 서비스 구현 (팀장)",
+                tech: "SegFace, MediaPipe, Gemini API, Rule Engine",
+                problem: [
+                    "Segmentation 단독 사용 시 기하학적 깊이 정보 부재로 측정 오차 발생",
+                    "촬영 환경(각도/거리)에 따른 결과 편차 발생 및 정성적 관상 데이터의 해석 어려움"
+                ],
+                solution: [
+                    "SegFace + MediaPipe 3D Landmark 기반 Hybrid 파이프라인 설계 및 Geometric Normalization 알고리즘 구현",
+                    "관상 기준을 Threshold 기반 Rule Engine으로 정량화하고, Gemini API 연동을 통한 '설명형(Explainable) AI 리포트' 자동 생성 프롬프트 엔지니어링 수행"
+                ],
+                result: [
+                    "이미지 분석-추론-리포트 생성으로 이어지는 자율적 Multimodal Agent 워크플로우 완성",
+                    "Transfer Learning을 통한 Overfitting 개선 및 정량화된 의사결정 경계 구축"
+                ]
+            },
+            {
+                id: 3,
+                title: "X-ray 보안 검색 위해물품 자동 판독",
+                category: "physical",
+                tag: "Physical AI",
+                role: "물리적 공간 문제를 디지털화하는 탐지 파이프라인 구축",
+                tech: "Faster R-CNN, YOLOv5/v8, Canny Edge",
+                problem: [
+                    "2-Stage Detector(Faster R-CNN)의 과도한 학습 시간 및 자원 비효율",
+                    "X-ray 투과 이미지 특성상 객체 경계 모호 및 소형/겹침 객체 탐지 한계"
+                ],
+                solution: [
+                    "입력 해상도 최적화 및 Backbone 하위 레이어 가중치 고정(Freeze) 실험 주도",
+                    "Canny Edge 전처리 도입 및 최신 논문(DC-YOLOv8)의 DC Module 이식"
+                ],
+                result: [
+                    "에폭 당 학습 시간 약 70% 단축 (20분 -> 6분)",
+                    "데이터 증강 및 구조 개선을 통해 최종 mAP@0.5 0.973의 고성능 모델 확보"
+                ]
+            },
+            {
+                id: 4,
+                title: "Ranking 예측 기반 Token Pruning",
+                category: "optimize",
+                tag: "Optimization",
+                role: "Transformer 내부 메커니즘 분석 및 연산 효율화",
+                tech: "ViT, K-Means Clustering, PyTorch",
+                problem: [
+                    "Vision Transformer(ViT)의 Self Attention O(n^2) 연산 복잡도 문제",
+                    "기존 토큰 중요도 예측(Mix-MLP) 모델의 추가 연산 비용 및 정보 손실 우려"
+                ],
+                solution: [
+                    "학습이 필요 없는 K-Means Clustering(K=2) 비지도 학습 기반 군집화 로직 설계",
+                    "패치 임베딩 공간에서 전경(FG)/배경(BG) 토큰을 구분하여, BG 토큰만 선택적으로 Pruning"
+                ],
+                result: [
+                    "Mask IoU 0.615 달성하여 상위 연구(Golden Ranking) 대비 75% 수준의 높은 근사 성능 확인",
+                    "추론 단계의 병목 현상을 파라미터 0개의 알고리즘으로 극복하며 특징 보존 성능 입증"
+                ]
+            },
+            {
+                id: 5,
+                title: "MBTI Reaction Simulator",
+                category: "agent",
+                tag: "Language AI",
+                role: "Persona-based Language AI Agent 개발",
+                tech: "OpenAI API (GPT-4o), Prompt Engineering, Streamlit",
+                problem: [
+                    "단순 챗봇을 넘어 각 성향 고유의 말투와 반응 방식을 일관되게 유지해야 하는 난제",
+                    "사용자 접근성이 높은 인터페이스의 신속한 구축 필요성"
+                ],
+                solution: [
+                    "16가지 성격 특성과 반응 스타일을 변수화하여 시스템 프롬프트에 주입하는 Prompt Engineering 고도화",
+                    "단순 API 호출이 아닌, 선택된 페르소나의 정합성을 검증하는 워크플로우 설계"
+                ],
+                result: [
+                    "GPT-4o가 특정 페르소나를 정확히 유지하며 응답하는 Agent 시스템 구현 및 배포 완료"
+                ]
+            }
+        ];
+
+        function createProjectCard(project) {
+            let bgColor = "bg-slate-100";
+            let textColor = "text-slate-600";
+            if(project.category === 'physical') { bgColor = "bg-emerald-100"; textColor = "text-emerald-700"; }
+            else if(project.category === 'agent') { bgColor = "bg-sky-100"; textColor = "text-sky-700"; }
+            else if(project.category === 'optimize') { bgColor = "bg-amber-100"; textColor = "text-amber-700"; }
+
+            return `
+                <div class="bg-white rounded-xl border border-slate-200 p-6 project-card cursor-pointer flex flex-col h-full" data-id="${project.id}">
+                    <div class="mb-4 flex items-start justify-between">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold ${bgColor} ${textColor}">
+                            ${project.tag}
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 leading-snug">${project.title}</h3>
+                    <p class="text-sm font-medium text-sky-600 mb-4">${project.role}</p>
+                    <div class="mt-auto">
+                        <p class="text-xs text-slate-500 bg-slate-50 p-2 rounded border border-slate-100 truncate flex items-center gap-1">
+                            <span class="text-slate-400">&#x1F6E0;</span> ${project.tech}
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProjects(filter = 'all') {
+            const grid = document.getElementById('project-grid');
+            grid.innerHTML = '';
+            
+            const filteredData = filter === 'all' 
+                ? projectData 
+                : projectData.filter(p => p.category === filter);
+
+            filteredData.forEach(p => {
+                grid.innerHTML += createProjectCard(p);
+            });
+
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', () => openModal(parseInt(card.getAttribute('data-id'))));
+            });
+        }
+
+        function openModal(id) {
+            const project = projectData.find(p => p.id === id);
+            if (!project) return;
+
+            const modalContent = document.getElementById('modal-content');
+            
+            let problemList = project.problem.map(p => `<li class="mb-1 flex gap-2"><span class="text-red-500">&#x2716;</span> <span>${p}</span></li>`).join('');
+            let solutionList = project.solution.map(s => `<li class="mb-1 flex gap-2"><span class="text-sky-500">&#x2714;</span> <span>${s}</span></li>`).join('');
+            let resultList = project.result.map(r => `<li class="mb-1 flex gap-2"><span class="text-emerald-500">&#x1F3C6;</span> <span><strong class="text-slate-800">${r}</strong></span></li>`).join('');
+
+            modalContent.innerHTML = `
+                <div class="mb-6 border-b border-slate-100 pb-4">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 mb-3">${project.tag}</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">${project.title}</h2>
+                    <p class="text-lg font-medium text-sky-700">${project.role}</p>
+                    <p class="text-sm text-slate-500 mt-2 flex items-center gap-2"><span class="text-slate-400">&#x1F6E0;</span> ${project.tech}</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-red-50/50 p-4 rounded-xl border border-red-100">
+                        <h4 class="font-bold text-red-800 mb-3 text-lg border-b border-red-200 pb-1">Problem</h4>
+                        <ul class="text-sm text-slate-700 space-y-2 ml-1">${problemList}</ul>
+                    </div>
+                    
+                    <div class="bg-sky-50/50 p-4 rounded-xl border border-sky-100">
+                        <h4 class="font-bold text-sky-800 mb-3 text-lg border-b border-sky-200 pb-1">Solution</h4>
+                        <ul class="text-sm text-slate-700 space-y-2 ml-1">${solutionList}</ul>
+                    </div>
+                    
+                    <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                        <h4 class="font-bold text-emerald-800 mb-3 text-lg border-b border-emerald-200 pb-1">Result / Impact</h4>
+                        <ul class="text-sm text-slate-700 space-y-2 ml-1">${resultList}</ul>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.getElementById('project-modal');
+            const wrapper = document.getElementById('modal-content-wrapper');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                wrapper.classList.remove('scale-95');
+                wrapper.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            const wrapper = document.getElementById('modal-content-wrapper');
+            
+            modal.classList.add('opacity-0');
+            wrapper.classList.remove('scale-100');
+            wrapper.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+        document.getElementById('project-modal').addEventListener('click', (e) => {
+            if(e.target === document.getElementById('project-modal')) closeModal();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-sky-600', 'text-white', 'shadow-md');
+                    b.classList.add('bg-slate-100', 'text-slate-600');
+                });
+                
+                e.target.classList.remove('bg-slate-100', 'text-slate-600');
+                e.target.classList.add('bg-sky-600', 'text-white', 'shadow-md');
+                
+                renderProjects(e.target.getAttribute('data-filter'));
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProjects();
+
+            Chart.defaults.font.family = "'Pretendard', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            const ctxCompetency = document.getElementById('competencyChart').getContext('2d');
+            new Chart(ctxCompetency, {
+                type: 'radar',
+                data: {
+                    labels: ['Physical AI (Vision/Edge)', 'Language AI / Agent', 'Model Optimization', 'System Architecture', 'Data Processing'],
+                    datasets: [{
+                        label: 'Core Skills',
+                        data: [90, 75, 85, 70, 80],
+                        backgroundColor: 'rgba(2, 132, 199, 0.2)',
+                        borderColor: 'rgba(2, 132, 199, 1)',
+                        pointBackgroundColor: 'rgba(2, 132, 199, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(2, 132, 199, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0,0,0,0.05)' },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            pointLabels: { font: { size: 12, weight: '600' }, color: '#334155' },
+                            ticks: { display: false, min: 0, max: 100 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            const ctxImpact1 = document.getElementById('impactChart1').getContext('2d');
+            new Chart(ctxImpact1, {
+                type: 'bar',
+                data: {
+                    labels: ['기존 모델', '경량화(MobileNetV3)'],
+                    datasets: [
+                        {
+                            label: 'Parameter Size (MB)',
+                            data: [133, 22],
+                            backgroundColor: ['#cbd5e1', '#10b981'],
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Size (MB)' } } }
+                }
+            });
+
+            const ctxImpact2 = document.getElementById('impactChart2').getContext('2d');
+            new Chart(ctxImpact2, {
+                type: 'bar',
+                data: {
+                    labels: ['최적화 전', '최적화 후(Freeze 적용)'],
+                    datasets: [
+                        {
+                            label: 'Epoch 당 소요시간 (분)',
+                            data: [20, 6],
+                            backgroundColor: ['#cbd5e1', '#0ea5e9'],
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Time (Minutes)' } } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
